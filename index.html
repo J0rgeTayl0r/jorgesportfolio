@@ -25,6 +25,13 @@
       font-family: 'Fira Code', monospace;
       overflow: hidden;
     }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      padding: 1rem;
+    }
     .terminal {
       max-width: 800px;
       width: 100%;
@@ -32,126 +39,160 @@
       background-color: #000;
       border-radius: 0;
     }
-    h1, p, ul {
-      margin-bottom: 16px;
+    h1, p, a {
+      color: #00ff00;
     }
     a {
-      color: #00ff00;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    a:hover {
       text-decoration: underline;
     }
-    .command-line pre {
-      margin-top: 16px;
+    .commands-list {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #111;
+      border-radius: 0;
+      border: 1px solid #555;
+    }
+    .commands-list ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    .commands-list li {
+      margin: 5px 0;
+    }
+    .command-line {
+      margin-top: 20px;
+    }
+    .command-line pre::before,
+    #prompt::before {
+      content: "www-data@jorgesportfolio:~$";
+      color: #ff4444;
+      margin-right: 5px;
+    }
+    .command-line pre span.command-text,
+    .input-area input {
+      color: #00ff00;
+    }
+    #output a {
+      color: #ff4444;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    #output a:hover {
+      color: #ff2222;
+    }
+    .input-area {
+      margin-top: 10px;
     }
     .input-area input {
       background-color: #000;
       color: #00ff00;
       border: none;
+      border-bottom: 1px solid #00ff00;
       width: 100%;
-      padding: 10px;
+      padding: 10px 5px;
       font-family: 'Fira Code', monospace;
       font-size: 18px;
+      outline: none;
+      border-radius: 0;
     }
-    .commands-list a {
-      display: inline-block;
-      margin-right: 15px;
-      cursor: pointer;
+    .input-area input:focus {
+      border-bottom-color: #0f0;
     }
-    .click-hint {
-      color: red;
-      margin-top: 10px;
+    #output-container {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <div class="terminal">
     <h1>Welcome to Jorge's Terminal</h1>
-    <p>Type or click a command to learn more about Jorge Taylor.</p>
+    <p>Type or select a command to learn more about Jorge Taylor.</p>
 
     <div class="commands-list">
-      <a onclick="executeCommand('cat resume.txt')">cat resume.txt</a>
-      <a onclick="executeCommand('cat homelab.txt')">cat homelab.txt</a>
-      <a onclick="executeCommand('cat linkedin.txt')">cat linkedin.txt</a>
-      <a onclick="executeCommand('cat email.txt')">cat email.txt</a>
-      <a onclick="executeCommand('cat tryhackme.txt')">cat tryhackme.txt</a>
-      <a onclick="executeCommand('cat googlecert.txt')">cat googlecert.txt</a>
-      <a onclick="executeCommand('cat projects.txt')">cat projects.txt</a>
-      <a onclick="executeCommand('whoami')">whoami</a>
-      <a onclick="executeCommand('clear')">clear</a>
+      <p>Available commands:</p>
+      <ul>
+        <li><a href="#" onclick="runCommand('cat resume.txt')">cat resume.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat homelab.txt')">cat homelab.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat linkedin.txt')">cat linkedin.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat email.txt')">cat email.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat tryhackme.txt')">cat tryhackme.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat googlecert.txt')">cat googlecert.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat projects.txt')">cat projects.txt</a></li>
+        <li><a href="#" onclick="runCommand('whoami')">whoami</a></li>
+        <li><a href="#" onclick="runCommand('clear')">clear</a></li>
+      </ul>
     </div>
 
-    <div class="command-line">
-      <pre>www-data@jorgetaylor:~$</pre>
+    <div class="command-line"><pre id="prompt"></pre></div>
+    <div class="input-area"><input type="text" id="commandInput" placeholder="Enter a command..." /></div>
+    <div id="output-container">
+      <div id="output"></div>
     </div>
-
-    <div class="input-area">
-      <input type="text" id="commandInput" placeholder="Enter a command..." />
-    </div>
-
-    <div id="output"></div>
   </div>
 
-  <script> //Start JS
-    document.addEventListener("DOMContentLoaded", function () {
-      const commandInput = document.getElementById('commandInput');
-      const outputDiv = document.getElementById('output');
+  <script>
+    const commandInput = document.getElementById('commandInput');
+    const outputDiv = document.getElementById('output');
+    const outputContainer = document.getElementById('output-container');
 
-      function executeCommand(command) {
-        commandInput.value = command;
-        processCommand();
+    function runCommand(cmd) {
+      commandInput.value = cmd;
+      processCommand();
+    }
+
+    function processCommand() {
+      const command = commandInput.value.trim().toLowerCase();
+      let response = '';
+
+      switch (command) {
+        case 'cat resume.txt':
+          response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">View Resume</a></p>';
+          break;
+        case 'cat homelab.txt':
+          response = '<p>Jorge is building a powerful home lab with virtualization, offensive tooling, and custom scripting for real-world pentesting simulation.</p>';
+          break;
+        case 'cat linkedin.txt':
+          response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">Jorge\'s LinkedIn</a></p>';
+          break;
+        case 'cat email.txt':
+          response = '<p>Email: jorgetaylorthe2nd@gmail.com</p>';
+          break;
+        case 'cat tryhackme.txt':
+          response = '<p><a href="https://tryhackme.com/p/L0rdV0ldem0rt" target="_blank">TryHackMe Profile</a></p>' +
+                     '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-GIZ7URTUQF.pdf" target="_blank">Jr Penetration Tester Cert</a></p>' +
+                     '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-8PSAKRTAAK.pdf" target="_blank">Web Fundamentals Cert</a></p>' +
+                     '<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4329769" style="border:none; width:100%; height:200px;"></iframe>';
+          break;
+        case 'cat googlecert.txt':
+          response = '<p><a href="https://www.coursera.org/account/accomplishments/specialization/YGG46CN888BV" target="_blank">Google Cybersecurity Certificate</a></p>';
+          break;
+        case 'cat projects.txt':
+          response = '<p>Projects coming soon...</p>';
+          break;
+        case 'whoami':
+          response = '<p>www-data</p>';
+          break;
+        case 'clear':
+          outputDiv.innerHTML = '';
+          commandInput.value = '';
+          return;
+        default:
+          response = '<p>Unknown command: ' + command + '</p>';
       }
 
-      function processCommand() {
-        const command = commandInput.value.trim().toLowerCase();
-        let response = '';
+      outputDiv.innerHTML += `<div class='command-line'><pre>${command}</pre>${response}</div>`;
+      commandInput.value = '';
+      outputContainer.scrollTop = outputContainer.scrollHeight;
+    }
 
-        switch (command) {
-          case 'cat resume.txt':
-            response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">View Resume</a></p>';
-            break;
-          case 'cat homelab.txt':
-            response = '<p>Jorge is building a powerful home lab with virtualization, offensive tooling, and custom scripting for real-world pentesting simulation.</p>';
-            break;
-          case 'cat linkedin.txt':
-            response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">Jorge\'s LinkedIn</a></p>';
-            break;
-          case 'cat email.txt':
-            response = '<p>Email: jorgetaylorthe2nd@gmail.com</p>';
-            break;
-          case 'cat tryhackme.txt':
-            response = '<p><a href="https://tryhackme.com/p/L0rdV0ldem0rt" target="_blank">TryHackMe Profile</a></p>' +
-                       '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-GIZ7URTUQF.pdf" target="_blank">Jr Penetration Tester Cert</a></p>' +
-                       '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-8PSAKRTAAK.pdf" target="_blank">Web Fundamentals Cert</a></p>' +
-                       '<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4329769" style="border:none; width:100%; height:200px;"></iframe>';
-            break;
-          case 'cat googlecert.txt':
-            response = '<p><a href="https://www.coursera.org/account/accomplishments/specialization/YGG46CN888BV" target="_blank">Google Cybersecurity Certificate</a></p>';
-            break;
-          case 'cat projects.txt':
-            response = '<p>Projects coming soon...</p>';
-            break;
-          case 'whoami':
-            response = '<p>www-data</p>';
-            break;
-          case 'clear':
-            outputDiv.innerHTML = '';
-            commandInput.value = '';
-            return;
-          default:
-            response = '<p>Unknown command: ' + command + '</p>';
-        }
-
-        outputDiv.innerHTML += '<div class="command-line"><pre>www-data@jorgetaylor:~$ ' + command + '</pre></div>' + response;
-        commandInput.value = '';
-        outputDiv.scrollTop = outputDiv.scrollHeight;
-      }
-
-      commandInput.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') {
-          processCommand();
-        }
-      });
-
-      window.executeCommand = executeCommand;
+    commandInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') processCommand();
     });
   </script>
 </body>

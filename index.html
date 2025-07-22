@@ -32,6 +32,38 @@
       width: 100%;
       padding: 20px;
       background-color: #000;
+      /* Style links inside the output area red and underline */
+#output a {
+  color: #ff4444;       /* red text */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Optional: on hover, maybe a brighter red */
+#output a:hover {
+  color: #ff2222;
+}  
+        /* Style only username@host in red */
+.command-line pre,
+#prompt {
+  color: #00ff00; /* keep default green */
+  font-family: 'Fira Code', monospace;
+  font-size: 18px;
+  white-space: pre-wrap;
+}
+
+.command-line pre::before,
+#prompt::before {
+  content: "www-data@jorgeterminal:";
+  color: #ff4444; /* red username@host */
+  margin-right: 5px;
+}
+
+.command-line pre span.command-text,
+.input-area input {
+  color: #00ff00; /* command text green */
+}
+
       /* No border-radius */
       border-radius: 0;
       /* No box-shadow */

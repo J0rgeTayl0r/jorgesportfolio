@@ -54,7 +54,7 @@
 
 .command-line pre::before,
 #prompt::before {
-  content: "www-data@jorgeterminal:~$";
+  content: "www-data@jorgesterminal:~$";
   color: #ff4444; /* red username@host */
   margin-right: 5px;
 }
@@ -207,7 +207,7 @@ outputContainer.scrollTop = outputContainer.scrollHeight;
       outputDiv.scrollTop = outputDiv.scrollHeight;
     }
 
-commandInput.addEventListener('keypress', function(event) {
+commandInput.addEventListener('keydown', function(event) {
   if (event.key === 'Enter') {
     event.preventDefault();
     processCommand();

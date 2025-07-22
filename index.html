@@ -1,7 +1,8 @@
 <!-- 
-    Made with ❤️ by Jorge Taylor in New York City, USA!
+    Made with ❤️ by Jorge Taylor 
     If you're reading this, you either know your way around dev tools or you're lost. Either way—respect.
 -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,210 +11,148 @@
   <title>Jorge's Terminal</title>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet" />
   <style>
-    /* Minimal, clean black terminal style */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     html, body {
-      width: 100%; height: 100%;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
       background-color: #000;
       color: #00ff00;
       font-family: 'Fira Code', monospace;
       overflow: hidden;
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      min-height: 100vh;
-      padding: 1rem;
     }
     .terminal {
       max-width: 800px;
       width: 100%;
       padding: 20px;
       background-color: #000;
-      /* Style links inside the output area red and underline */
-#output a {
-  color: #ff4444;       /* red text */
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* Optional: on hover, maybe a brighter red */
-#output a:hover {
-  color: #ff2222;
-}  
-        /* Style only username@host in red */
-.command-line pre,
-#prompt {
-  color: #00ff00; /* keep default green */
-  font-family: 'Fira Code', monospace;
-  font-size: 18px;
-  white-space: pre-wrap;
-}
-
-.command-line pre::before,
-#prompt::before {
-  content: "www-data@jorgesterminal:~$";
-  color: #ff4444; /* red username@host */
-  margin-right: 5px;
-}
-
-.command-line pre span.command-text,
-.input-area input {
-  color: #00ff00; /* command text green */
-}
-
-      /* No border-radius */
       border-radius: 0;
-      /* No box-shadow */
-      box-shadow: none;
     }
-    h1, p, a {
+    h1, p, ul {
+      margin-bottom: 16px;
+    }
+    a {
       color: #00ff00;
+      text-decoration: underline;
     }
-    a { 
-      text-decoration: none; 
-      cursor: pointer;
-    }
-    a:hover { 
-      text-decoration: underline; 
-    }
-    .command-line { 
-      margin-top: 20px; 
-    }
-    .input-area { 
-      margin-top: 10px; 
+    .command-line pre {
+      margin-top: 16px;
     }
     .input-area input {
       background-color: #000;
       color: #00ff00;
       border: none;
-      border-bottom: 1px solid #00ff00; /* subtle green underline */
       width: 100%;
-      padding: 10px 5px;
+      padding: 10px;
       font-family: 'Fira Code', monospace;
       font-size: 18px;
-      outline: none;
-      /* No border-radius */
-      border-radius: 0;
     }
-    .input-area input:focus {
-      border-bottom-color: #0f0;
+    .commands-list a {
+      display: inline-block;
+      margin-right: 15px;
+      cursor: pointer;
     }
-    .commands-list { 
-      margin-top: 20px; 
-      padding: 10px;
-      background-color: #111; 
-      /* Remove border-radius */
-      border-radius: 0;
-      border: 1px solid #555;
-    }
-    .commands-list ul { 
-      list-style-type: none; 
-      padding: 0; 
-    }
-    .commands-list li { 
-      margin: 5px 0; 
+    .click-hint {
+      color: red;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <div class="terminal">
     <h1>Welcome to Jorge's Terminal</h1>
-    <p>Type or select a command to learn more about Jorge Taylor.</p>
+    <p>Type or click a command to learn more about Jorge Taylor.</p>
 
     <div class="commands-list">
-      <p>Available commands:</p>
-      <ul>
-        <li><a href="#" onclick="runCommand('cat resume.txt')">cat resume.txt</a></li>
-        <li><a href="#" onclick="runCommand('cat homelab.txt')">cat homelab.txt</a></li>
-        <li><a href="#" onclick="runCommand('cat linkedin.txt')">cat linkedin.txt</a></li>
-        <li><a href="#" onclick="runCommand('cat email.txt')">cat email.txt</a></li>
-        <li><a href="#" onclick="runCommand('cat tryhackme.txt')">cat tryhackme.txt</a></li>
-        <li><a href="#" onclick="runCommand('cat googlecert.txt')">cat googlecert.txt</a></li>
-        <li><a href="#" onclick="runCommand('cat projects.txt')">cat projects.txt</a></li>
-        <li><a href="#" onclick="runCommand('whoami')">whoami</a></li>
-        <li><a href="#" onclick="runCommand('clear')">clear</a></li>
-      </ul>
+      <a onclick="executeCommand('cat resume.txt')">cat resume.txt</a>
+      <a onclick="executeCommand('cat homelab.txt')">cat homelab.txt</a>
+      <a onclick="executeCommand('cat linkedin.txt')">cat linkedin.txt</a>
+      <a onclick="executeCommand('cat email.txt')">cat email.txt</a>
+      <a onclick="executeCommand('cat tryhackme.txt')">cat tryhackme.txt</a>
+      <a onclick="executeCommand('cat googlecert.txt')">cat googlecert.txt</a>
+      <a onclick="executeCommand('cat projects.txt')">cat projects.txt</a>
+      <a onclick="executeCommand('whoami')">whoami</a>
+      <a onclick="executeCommand('clear')">clear</a>
     </div>
 
-    <div class="command-line"><pre id="prompt"></pre></div>
-    <div class="input-area"><input type="text" id="commandInput" placeholder="Enter a command..." /></div>
-   <div id="output-container" style="max-height: 300px; overflow-y: auto; margin-top: 20px;">
-  <div id="output"></div>
-</div>
+    <div class="command-line">
+      <pre>www-data@jorgetaylor:~$</pre>
+    </div>
 
+    <div class="input-area">
+      <input type="text" id="commandInput" placeholder="Enter a command..." />
+    </div>
+
+    <div id="output"></div>
   </div>
-<script>
-//Start JS
-  document.addEventListener("DOMContentLoaded", function () {
-    const commandInput = document.getElementById('commandInput');
-    const outputDiv = document.getElementById('output');
 
-    function executeCommand(command) {
-      commandInput.value = command;
-      processCommand();
-    }
+  <script> //Start JS
+    document.addEventListener("DOMContentLoaded", function () {
+      const commandInput = document.getElementById('commandInput');
+      const outputDiv = document.getElementById('output');
 
-    function processCommand() {
-      const command = commandInput.value.trim().toLowerCase();
-      let response = '';
-
-      switch (command) {
-        case 'cat resume':
-          response = '<p class="click-hint">Click link below:</p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">View Resume</a>';
-          break;
-        case 'cat home_lab':
-          response = '<p class="click-hint">Click link below:</p><a href="https://jorgetaylor.github.io/home_lab" target="_blank">Explore Home Lab</a>';
-          break;
-        case 'cat linkedin':
-          response = '<p class="click-hint">Click link below:</p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">LinkedIn</a>';
-          break;
-        case 'cat email':
-          response = '<p>Email: jorgetaylorthe2nd@gmail.com</p>';
-          break;
-        case 'cat tryhackme':
-          response = '<p class="click-hint">Click any certificate or visit profile:</p>' +
-            '<ul>' +
-            '<li><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-GIZ7URTUQF.pdf" target="_blank">Jr Penetration Tester Cert</a></li>' +
-            '<li><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-8PSAKRTAAK.pdf" target="_blank">Web Fundamentals Cert</a></li>' +
-            '<li><a href="https://tryhackme.com/p/L0rdV0ldem0rt" target="_blank">THM Profile</a></li>' +
-            '</ul>' +
-            '<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4329769" style="border:none;"></iframe>';
-          break;
-        case 'cat google_cert':
-          response = '<p class="click-hint">Click link below:</p><a href="https://www.coursera.org/account/accomplishments/specialization/YGG46CN888BV" target="_blank">Google Certification</a>';
-          break;
-        case 'cat projects':
-          response = '<p class="click-hint">Coming soon...</p>';
-          break;
-        case 'whoami':
-          response = '<p>Jorge Taylor</p>';
-          break;
-        case 'clear':
-          outputDiv.innerHTML = '';
-          commandInput.value = '';
-          return;
-        default:
-          response = `<p>Unknown command: ${command}</p>`;
-      }
-
-      outputDiv.innerHTML += '<div class="command-line"><pre>' + command + '</pre></div>' + response;
-      commandInput.value = '';
-      outputDiv.scrollTop = outputDiv.scrollHeight;
-    }
-
-    //  THIS is the key part I was missing....I think.
-    commandInput.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter') {
+      function executeCommand(command) {
+        commandInput.value = command;
         processCommand();
       }
-    });
 
-    // Optional: expose function to global scope for onclick links
-    window.executeCommand = executeCommand;
-  });
-</script>
+      function processCommand() {
+        const command = commandInput.value.trim().toLowerCase();
+        let response = '';
+
+        switch (command) {
+          case 'cat resume.txt':
+            response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">View Resume</a></p>';
+            break;
+          case 'cat homelab.txt':
+            response = '<p>Jorge is building a powerful home lab with virtualization, offensive tooling, and custom scripting for real-world pentesting simulation.</p>';
+            break;
+          case 'cat linkedin.txt':
+            response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">Jorge\'s LinkedIn</a></p>';
+            break;
+          case 'cat email.txt':
+            response = '<p>Email: jorgetaylorthe2nd@gmail.com</p>';
+            break;
+          case 'cat tryhackme.txt':
+            response = '<p><a href="https://tryhackme.com/p/L0rdV0ldem0rt" target="_blank">TryHackMe Profile</a></p>' +
+                       '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-GIZ7URTUQF.pdf" target="_blank">Jr Penetration Tester Cert</a></p>' +
+                       '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-8PSAKRTAAK.pdf" target="_blank">Web Fundamentals Cert</a></p>' +
+                       '<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4329769" style="border:none; width:100%; height:200px;"></iframe>';
+            break;
+          case 'cat googlecert.txt':
+            response = '<p><a href="https://www.coursera.org/account/accomplishments/specialization/YGG46CN888BV" target="_blank">Google Cybersecurity Certificate</a></p>';
+            break;
+          case 'cat projects.txt':
+            response = '<p>Projects coming soon...</p>';
+            break;
+          case 'whoami':
+            response = '<p>www-data</p>';
+            break;
+          case 'clear':
+            outputDiv.innerHTML = '';
+            commandInput.value = '';
+            return;
+          default:
+            response = '<p>Unknown command: ' + command + '</p>';
+        }
+
+        outputDiv.innerHTML += '<div class="command-line"><pre>www-data@jorgetaylor:~$ ' + command + '</pre></div>' + response;
+        commandInput.value = '';
+        outputDiv.scrollTop = outputDiv.scrollHeight;
+      }
+
+      commandInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+          processCommand();
+        }
+      });
+
+      window.executeCommand = executeCommand;
+    });
+  </script>
 </body>
 </html>

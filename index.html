@@ -140,13 +140,23 @@
 
     <div class="command-line"><pre id="prompt"></pre></div>
     <div class="input-area"><input type="text" id="commandInput" placeholder="Enter a command..." /></div>
-    <div id="output"></div>
+   <div id="output-container" style="max-height: 300px; overflow-y: auto; margin-top: 20px;">
+  <div id="output"></div>
+</div>
+
   </div>
 
   <script>
     const commandInput = document.getElementById('commandInput');
     const outputDiv = document.getElementById('output');
+    const outputContainer = document.getElementById('output-container'); // new container div for scrolling
 
+// When adding output:
+outputDiv.innerHTML += `<div class='command-line'><pre>${command}</pre>${response}</div>`;
+
+// Then scroll the container:
+outputContainer.scrollTop = outputContainer.scrollHeight;
+      
     function runCommand(cmd) {
       commandInput.value = cmd;
       processCommand();

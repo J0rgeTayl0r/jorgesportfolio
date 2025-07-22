@@ -1,0 +1,173 @@
+<!-- 
+    Made with ❤️ by Jorge Taylor in New York City, USA!
+    If you're reading this, you either know your way around dev tools or you're lost. Either way—respect.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jorge's Terminal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet" />
+  <style>
+    /* Minimal, clean black terminal style */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      background-color: #000;
+      color: #00ff00;
+      font-family: 'Fira Code', monospace;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      min-height: 100vh;
+      padding: 1rem;
+    }
+    .terminal {
+      max-width: 800px;
+      width: 100%;
+      padding: 20px;
+      background-color: #000;
+      /* No border-radius */
+      border-radius: 0;
+      /* No box-shadow */
+      box-shadow: none;
+    }
+    h1, p, a {
+      color: #00ff00;
+    }
+    a { 
+      text-decoration: none; 
+      cursor: pointer;
+    }
+    a:hover { 
+      text-decoration: underline; 
+    }
+    .command-line { 
+      margin-top: 20px; 
+    }
+    .input-area { 
+      margin-top: 10px; 
+    }
+    .input-area input {
+      background-color: #000;
+      color: #00ff00;
+      border: none;
+      border-bottom: 1px solid #00ff00; /* subtle green underline */
+      width: 100%;
+      padding: 10px 5px;
+      font-family: 'Fira Code', monospace;
+      font-size: 18px;
+      outline: none;
+      /* No border-radius */
+      border-radius: 0;
+    }
+    .input-area input:focus {
+      border-bottom-color: #0f0;
+    }
+    .commands-list { 
+      margin-top: 20px; 
+      padding: 10px;
+      background-color: #111; 
+      /* Remove border-radius */
+      border-radius: 0;
+      border: 1px solid #555;
+    }
+    .commands-list ul { 
+      list-style-type: none; 
+      padding: 0; 
+    }
+    .commands-list li { 
+      margin: 5px 0; 
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <h1>Welcome to Jorge's Terminal</h1>
+    <p>Type or select a command to learn more about Jorge Taylor.</p>
+
+    <div class="commands-list">
+      <p>Available commands:</p>
+      <ul>
+        <li><a href="#" onclick="runCommand('cat resume.txt')">cat resume.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat homelab.txt')">cat homelab.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat linkedin.txt')">cat linkedin.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat email.txt')">cat email.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat tryhackme.txt')">cat tryhackme.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat googlecert.txt')">cat googlecert.txt</a></li>
+        <li><a href="#" onclick="runCommand('cat projects.txt')">cat projects.txt</a></li>
+        <li><a href="#" onclick="runCommand('whoami')">whoami</a></li>
+        <li><a href="#" onclick="runCommand('clear')">clear</a></li>
+      </ul>
+    </div>
+
+    <div class="command-line"><pre id="prompt">www-data@jorgeterminal:~$</pre></div>
+    <div class="input-area"><input type="text" id="commandInput" placeholder="Enter a command..." /></div>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const commandInput = document.getElementById('commandInput');
+    const outputDiv = document.getElementById('output');
+
+    function runCommand(cmd) {
+      commandInput.value = cmd;
+      processCommand();
+    }
+
+    function processCommand() {
+      const command = commandInput.value.trim().toLowerCase();
+      let response = '';
+
+      switch (command) {
+        case 'cat resume.txt':
+          response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">View Resume</a></p>';
+          break;
+        case 'cat homelab.txt':
+          response = '<p>Jorge is building a powerful home lab with virtualization, offensive tooling, and custom scripting for real-world pentesting simulation.</p>';
+          break;
+        case 'cat linkedin.txt':
+          response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">Jorge\'s LinkedIn</a></p>';
+          break;
+        case 'cat email.txt':
+          response = '<p>Email: jorgetaylorthe2nd@gmail.com</p>';
+          break;
+        case 'cat tryhackme.txt':
+          response = '<p><a href="https://tryhackme.com/p/L0rdV0ldem0rt" target="_blank">TryHackMe Profile</a></p>' +
+                     '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-GIZ7URTUQF.pdf" target="_blank">Jr Penetration Tester Cert</a></p>' +
+                     '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-8PSAKRTAAK.pdf" target="_blank">Web Fundamentals Cert</a></p>' +
+                     '<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4329769" style="border:none; width:100%; height:200px;"></iframe>';
+          break;
+        case 'cat googlecert.txt':
+          response = '<p><a href="https://www.coursera.org/account/accomplishments/specialization/YGG46CN888BV" target="_blank">Google Cybersecurity Certificate</a></p>';
+          break;
+        case 'cat projects.txt':
+          response = '<p>Projects coming soon...</p>';
+          break;
+        case 'whoami':
+          response = '<p>www-data</p>';
+          break;
+        case 'clear':
+          outputDiv.innerHTML = '';
+          commandInput.value = '';
+          return;
+        default:
+          response = '<p>Unknown command: ' + command + '</p>';
+      }
+
+      outputDiv.innerHTML += `<div class='command-line'><pre>www-data@jorgeterminal:~$ ${command}</pre>${response}</div>`;
+      commandInput.value = '';
+      outputDiv.scrollTop = outputDiv.scrollHeight;
+    }
+
+    commandInput.addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') processCommand();
+    });
+  </script>
+</body>
+</html>

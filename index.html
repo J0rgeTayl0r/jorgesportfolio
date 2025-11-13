@@ -1,8 +1,7 @@
 <!-- 
     Made with ❤️ by Jorge Taylor 
-    If you're reading this, you either know your way around dev tools or you're lost. Either way—respect.
+    If you're reading this, you either know your way around dev tools or you're lost. Either way respect.
 -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,54 +140,97 @@
     const outputDiv = document.getElementById('output');
     const outputContainer = document.getElementById('output-container');
 
+    // Map commands to either 'open' (immediately navigate) or 'print' (render output).
+    const commandsMap = {
+      'cat resume.txt': { type: 'open', url: 'https://docs.google.com/document/d/e/2PACX-1vQlymGHitbjbSjiOYRoFCMsEurIykKyBAADJIUppABh4WGhsOLvB17uFbc1PUGdIx10Bl6kANnrfVAM/pub' },
+      'cat homelab.txt': { type: 'open', url: 'https://garnet-coat-9ec.notion.site/Jorges-Home-Lab-239dfb959fe980f89f24d385b39d2d88' },
+      'cat linkedin.txt': { type: 'open', url: "https://www.linkedin.com/in/jorge-taylor/" },
+      'cat email.txt': { type: 'print', html: '<p>Email: jorgetaylorthe2nd@gmail.com</p>' },
+      'cat tryhackme.txt': { type: 'print', html:
+        '<p><a href="https://tryhackme.com/p/L0rdV0ldem0rt" target="_blank">TryHackMe Profile</a></p>' +
+        '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-GIZ7URTUQF.pdf" target="_blank">Jr Penetration Tester Cert</a></p>' +
+        '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-8PSAKRTAAK.pdf" target="_blank">Web Fundamentals Cert</a></p>' +
+        '<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4329769" style="border:none; width:100%; height:200px;"></iframe>'
+      },
+      'cat googlecert.txt': { type: 'open', url: 'https://www.coursera.org/account/accomplishments/specialization/YGG46CN888BV' },
+      'cat projects.txt': { type: 'print', html:
+        '<p><a href="https://medium.com/@l0rdv0ld3m0r7/emulating-an-apt-a-cloud-based-c2-infrastructure-for-red-team-training-b36b46d800f5" target="_blank">Emulating an APT — Cloud-based C2 for Red Team Training</a></p>' +
+        '<p><a href="https://medium.com/@l0rdv0ld3m0r7/from-beanstalk-to-root-how-i-escalated-aws-permissions-with-pacu-f474a21ac31d" target="_blank">From Beanstalk to Root — AWS Escalation with PACU</a></p>' +
+        '<p><a href="https://medium.com/@l0rdv0ld3m0r7/how-i-turned-a-not-applicable-rxss-into-an-accepted-finding-on-a-european-hr-giant-6f9bff1f07c4" target="_blank">How I turned a "Not applicable" RXSS into an Accepted Finding (bug bounty write-up)</a></p>'
+      },
+      'whoami': { type: 'print', html: '<p>www-data</p>' },
+      'clear': { type: 'clear' }
+    };
+
     function runCommand(cmd) {
+      // set input field but also process immediately
       commandInput.value = cmd;
       processCommand();
     }
 
     function processCommand() {
-      const command = commandInput.value.trim().toLowerCase();
-      let response = '';
+      const raw = commandInput.value.trim();
+      if (!raw) return;
+      const command = raw.toLowerCase();
 
-      switch (command) {
-        case 'cat resume.txt':
-          response = '<p><a href="https://docs.google.com/document/d/e/2PACX-1vQlymGHitbjbSjiOYRoFCMsEurIykKyBAADJIUppABh4WGhsOLvB17uFbc1PUGdIx10Bl6kANnrfVAM/pub" target="_blank">View Resume</a></p>';
-          break;
-        case 'cat homelab.txt':
-          response = '<p><a href="https://garnet-coat-9ec.notion.site/Jorges-Home-Lab-239dfb959fe980f89f24d385b39d2d88" target="_blank">Home lab with virtualization, offensive tooling, and custom scripting for real-world pentesting simulation.</a></p>';
-          break;
-        case 'cat linkedin.txt':
-          response = '<p><a href="https://www.linkedin.com/in/jorge-taylor/" target="_blank">Jorge\'s LinkedIn</a></p>';
-          break;
-        case 'cat email.txt':
-          response = '<p>Email: jorgetaylorthe2nd@gmail.com</p>';
-          break;
-        case 'cat tryhackme.txt':
-          response = '<p><a href="https://tryhackme.com/p/L0rdV0ldem0rt" target="_blank">TryHackMe Profile</a></p>' +
-                     '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-GIZ7URTUQF.pdf" target="_blank">Jr Penetration Tester Cert</a></p>' +
-                     '<p><a href="https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-8PSAKRTAAK.pdf" target="_blank">Web Fundamentals Cert</a></p>' +
-                     '<iframe src="https://tryhackme.com/api/v2/badges/public-profile?userPublicId=4329769" style="border:none; width:100%; height:200px;"></iframe>';
-          break;
-        case 'cat googlecert.txt':
-          response = '<p><a href="https://www.coursera.org/account/accomplishments/specialization/YGG46CN888BV" target="_blank">Google Cybersecurity Certificate</a></p>';
-          break;
-        case 'cat projects.txt':
-          response = '<p>Projects coming soon...</p>';
-          break;
-        case 'whoami':
-          response = '<p>www-data</p>';
-          break;
-        case 'clear':
+      const mapped = commandsMap[command];
+
+      // If mapped behavior exists, follow it.
+      if (mapped) {
+        if (mapped.type === 'open' && mapped.url) {
+          // Open the target immediately in a new tab, do not print link to output
+          window.open(mapped.url, '_blank', 'noopener');
+          commandInput.value = '';
+          return;
+        } else if (mapped.type === 'print' && mapped.html) {
+          appendOutput(command, mapped.html);
+          commandInput.value = '';
+          return;
+        } else if (mapped.type === 'clear') {
           outputDiv.innerHTML = '';
           commandInput.value = '';
           return;
-        default:
-          response = '<p>Unknown command: ' + command + '</p>';
+        }
       }
 
-      outputDiv.innerHTML += `<div class='command-line'><pre>${command}</pre>${response}</div>`;
+      // Fallback: existing behavior (print something or unknown)
+      let response = '';
+      switch (command) {
+        case 'cat resume.txt':
+        case 'cat homelab.txt':
+        case 'cat linkedin.txt':
+        case 'cat googlecert.txt':
+        case 'cat projects.txt':
+        case 'cat tryhackme.txt':
+        case 'cat email.txt':
+        case 'whoami':
+        case 'clear':
+          // handled above via commandsMap; this is just a safe fallback
+          response = '<p>Command handled.</p>';
+          break;
+        default:
+          response = '<p>Unknown command: ' + escapeHtml(command) + '</p>';
+      }
+
+      appendOutput(command, response);
       commandInput.value = '';
+    }
+
+    function appendOutput(command, htmlContent) {
+      // Keep the same visual structure as before
+      const safeCmd = '<pre>' + escapeHtml(command) + '</pre>';
+      outputDiv.innerHTML += `<div class='command-line'>${safeCmd}${htmlContent}</div>`;
       outputContainer.scrollTop = outputContainer.scrollHeight;
+    }
+
+    // basic helper to avoid accidental HTML injection if command shows up
+    function escapeHtml(unsafe) {
+      return unsafe
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
     }
 
     commandInput.addEventListener('keypress', function(event) {
@@ -197,3 +239,4 @@
   </script>
 </body>
 </html>
+
